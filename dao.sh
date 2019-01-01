@@ -4,6 +4,8 @@ RinkebyDAO='0xBF6879f5f9AdD7D36b5c5B4f63E59fd4E32A6A1c'
 getInitializationBlock='8b3dd749'
 # seth keccak 'NewAppProxy(address,bool,bytes32)'
 newAppProxy='d880e726dced8808d727f02dd0e6fdd3a945b24bfee77e13367bcbe61ddbaf47'
+#althea.open.aragonpm.eth
+altheaIdRin='33ec2d92fc47b5383901b8a3856d208d3a66104fa46c4a06f3f97536e9b6fc5b'
 
 function startBlock() {
   cat << EOF
