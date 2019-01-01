@@ -17,6 +17,9 @@ vaultId='7e852e0fcfce6551c13800f1e7476f982525c2b5277ba14b24339c68416336d1'
 
 getApp='be00bbd8'
 getVault='32f0a3b5'
+getInitializationBlock='8b3dd749'
+setApp='2ec1ae0a449b7ae354b9dacfb3ade6b6332ba26b7fcbb935835fa39dd7263b23'
+newAppProxy='d880e726dced8808d727f02dd0e6fdd3a945b24bfee77e13367bcbe61ddbaf47'
 
 function getBlock() {
   cat << EOF
@@ -43,6 +46,22 @@ function localAlthea() {
 EOF
 }
 
+function startBlock() {
+  cat << EOF
+{
+  "jsonrpc":"2.0",
+  "method":"eth_call",
+  "params":[{
+    "to": "$RinkebyDAO",
+    "data": "0x$getInitializationBlock"
+  },
+  "latest"
+  ],
+  "id":2
+}
+EOF
+}
+
 function altheaAddress() {
   cat << EOF
 {
@@ -50,8 +69,26 @@ function altheaAddress() {
   "method":"eth_call",
   "params":[{
     "to": "$RinkebyDAO",
-    "data": "0x$getApp$APP_ADDR_NAMESPACE$altheaIdRin"
+    "data": "0x$getApp$APP_ADDR_NAMESPACE$finance"
   },
+  "latest"
+  ],
+  "id":2
+}
+EOF
+}
+
+function getFilter() {
+  cat << EOF
+{
+  "jsonrpc":"2.0",
+  "method":"eth_getLogs",
+  "params":[{
+    "fromBlock":"earliest",
+    "toBlock":"lastest"
+    "address": "$DAO",
+    "topics": ["$newAppProxy"]
+  }],
   "latest"
   ],
   "id":2
@@ -61,16 +98,8 @@ EOF
 
 url='https://sasquatch.network/rinkeby'
 
-echo Local
-curl --silent \
-  -H "Accept: application/json" \
- -H "Content-Type:application/json" \
- -X POST --data "$(localAlthea)" http://localhost:8545 | jq '.result'
-
-echo ""
-echo ""
 echo Rinkeby
 curl --silent \
   -H "Accept: application/json" \
  -H "Content-Type:application/json" \
- -X POST --data "$(altheaAddress)" $url | jq '.result'
+ -X POST --data "$(startBlock)" $url
