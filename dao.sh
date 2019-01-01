@@ -39,13 +39,12 @@ EOF
 # URL of the RPC endpoint
 url='https://sasquatch.network/rinkeby'
 echo Rinkeby
-# This obtains the block number
+# This obtains the block number the DAO was created
 blockNumber=$(curl --silent \
  -H "Content-Type:application/json" \
  -X POST --data "$(startBlock)" $url | jq '.result')
 
-# removes quotes and 0x
-blockNumber=$(echo $blockNumber | sed 's|0x||; s|"||g' | tail -c 7)
+blockNumber=${blockNumber:61:6}
 echo blockNumber $blockNumber
 echo
 
