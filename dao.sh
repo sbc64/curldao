@@ -5,15 +5,6 @@ getInitializationBlock='8b3dd749'
 # seth keccak 'NewAppProxy(address,bool,bytes32)'
 newAppProxy='d880e726dced8808d727f02dd0e6fdd3a945b24bfee77e13367bcbe61ddbaf47'
 
-function getBlock() {
-  cat << EOF
-{
-  "jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1
-}
-EOF
-}
-
-
 function startBlock() {
   cat << EOF
 {
@@ -56,23 +47,23 @@ blockNumber=$(curl --silent \
 # removes quotes and 0x
 blockNumber=$(echo $blockNumber | sed 's|0x||; s|"||g' | tail -c 7)
 echo blockNumber $blockNumber
-
 echo
+
 # This curl obtains all of the logs that match the filter
 events=$(curl --silent \
  -H "Content-Type:application/json" \
  -X POST --data "$(getLogs $blockNumber)" $url | jq '.result' )
 
 # This obtains the data of the last log
-lastInstalled=$(echo $events | jq '.[-1].data' | sed 's|0x||; s|"||g')
+lastEvent=$(echo $events | jq '.[-1].data' | sed 's|0x||; s|"||g')
 
 # Event signature:
 #event NewAppProxy(address proxy, bool isUpgradeable, bytes32 appId);
 echo address:
-echo ${lastInstalled:0:64}
+echo ${lastEvent:0:64}
 echo
 echo isUpgradeable:
-echo ${lastInstalled:64:64}
+echo ${lastEvent:64:64}
 echo
 echo appId:
-echo ${lastInstalled:128:64}
+echo ${lastEvent:128:64}
