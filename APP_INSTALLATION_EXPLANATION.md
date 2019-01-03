@@ -20,7 +20,7 @@ The last parameter changes the flow of code by setting it as a default app. It t
 
 https://github.com/aragon/aragonOS/blob/dev/contracts/kernel/Kernel.sol#L216
 
-One can see that it saves the app in the `apps` hashmap with the `KERNEL_APP_ADDR_NAMESPACE` namespace. This allows one to later call `getApp()` with the kernel namespace bytes32 and the altheaId, `namehash('alhtea.open.aragonpm.eth)`. During this setup the event `NewAppProxy` gets emited, BUT the address of the proxy contract is not the same as the address that gets saved into the [mapping](https://github.com/aragon/aragonOS/blob/dev/contracts/kernel/Kernel.sol#L88-L89). The address that gets saved into that namespace is the base contract address, not the proxy address which is used by the front end app.
+The `_setAppIfNew()` function gets called and all it does is save the base app to the `KERNEL_APP_ADDR_NAMESPACE`. But only if the base app doesn't exist in that namespace. This allows one to later call `getApp()` with the kernel namespace bytes32 and the altheaId, `namehash('alhtea.open.aragonpm.eth)`. During this setup the event `NewAppProxy` gets emited, BUT the address of the proxy contract is not the same as the address that gets saved into the [mapping](https://github.com/aragon/aragonOS/blob/dev/contracts/kernel/Kernel.sol#L88-L89). The address that gets saved into that namespace is the base contract address, not the proxy address which is used by the front end app.
 
 After the proxies are created the next steps of the DAO kit is to call the `initialize()` function of the apps and then later set the different permissions in the kernel `ACL`.
 
@@ -30,12 +30,13 @@ The cli calls `newAppInstance` function on the DAO (wich is a Kernel.sol contrac
 
 One can see a few lines above that it is passing `false` for the last parameter. So this line: https://github.com/aragon/aragonOS/blob/dev/contracts/kernel/Kernel.sol#L92
 
+The `_setAppIfNew()` function gets called and all it does is save the base app to the `KERNEL_APP_ADDR_NAMESPACE`. But only if the base app doesn't exist in that namespace.
+
 is false and the app doesn't get installed in the `KERNEL_APP_ADDR_NAMESPACE`. The event `NewAppProxy` gets emitted but it is never saved into the `apps` hashmap of the kernel. The same flow mentioned earlier
 
 ### Conclusion
 
-On both cases when there is a new app it saves a base app namespace (which is also pretrified app explained [here](https://github.com/aragon/aragonOS/wiki/aragonOS-4:-Updates-to-aragonOS-and-aragon-apps#lifecycle-guarantees)). The only way to obtain the current proxy app is checking the `NewAppProxy` logs, since the app proxy DOES NOT get saved into the `apps` namespace
-
+On both cases the `_setAppIfNew()` function gets called and all it does is save the base app to the `KERNEL_APP_ADDR_NAMESPACE`. But only if the base app doesn't exist. This saves the base app into the hasmap. The only way to obtain the current proxy app is checking the `NewAppProxy` logs, since the app proxy DOES NOT get saved into the `apps` namespace
 
 According to Jorge about setting default apps:
 ```
