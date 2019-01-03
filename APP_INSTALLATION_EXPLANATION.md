@@ -35,3 +35,12 @@ is false and the app doesn't get installed in the `KERNEL_APP_ADDR_NAMESPACE`. T
 ### Conclusion
 
 On both cases when there is a new app it saves a base app namespace (a pretrified app explained [here](https://github.com/aragon/aragonOS/wiki/aragonOS-4:-Updates-to-aragonOS-and-aragon-apps#lifecycle-guarantees)). The only way to obtain the current proxy app is checking the `NewAppProxy` logs.
+
+
+According to Jorge about setting default apps:
+```
+this is useful when you want a certain app instance fetchable from other apps (smart contract level) in the DAO
+we use it for the ACL, the EVMScriptExecutorRegistry and the Vault that gets used as a escape hatch in case assets are sent to apps that don't know how to manage them
+we don't recommend using it for anything else, for example the Finance app depends on a Vault but we have a explicit dependency via a state variable (instead of using the default Vault)
+there is a brief explanation here: https://hack.aragon.org/docs/aragonos-ref.html#namespaces 
+```
