@@ -34,7 +34,7 @@ is false and the app doesn't get installed in the `KERNEL_APP_ADDR_NAMESPACE`. T
 
 ### Conclusion
 
-On both cases when there is a new app it saves a base app namespace (a pretrified app explained [here](https://github.com/aragon/aragonOS/wiki/aragonOS-4:-Updates-to-aragonOS-and-aragon-apps#lifecycle-guarantees)). The only way to obtain the current proxy app is checking the `NewAppProxy` logs.
+On both cases when there is a new app it saves a base app namespace (which is also pretrified app explained [here](https://github.com/aragon/aragonOS/wiki/aragonOS-4:-Updates-to-aragonOS-and-aragon-apps#lifecycle-guarantees)). The only way to obtain the current proxy app is checking the `NewAppProxy` logs, since the app proxy DOES NOT get saved into the `apps` namespace
 
 
 According to Jorge about setting default apps:
