@@ -1,4 +1,4 @@
-# Difference in the Althea app instalation between:
+# Difference in the Althea app installation between:
 
  * Solidity DAO kit script
  * aragon/cli install
