@@ -57,7 +57,7 @@ function getSubscriber() {
   "method":"eth_call",
   "params":[{
     "to": "$AltheaRinkeby",
-    "data": "0x$subnetSubscribers0000000000000000000000000000000000000000000000000000000000000001"
+    "data": "0x$subnetSubscribers$1"
   },
   "latest"],
   "id":2
@@ -85,22 +85,26 @@ EOF
 # URL of the RPC endpoint
 url='https://sasquatch.network/rinkeby'
 echo RINKEBY
-
-curl --silent \
- -H "Content-Type:application/json" \
- -X POST --data "$(getBlock)" $url | jq '.result'
+echo
 
 echo Count of Subscribers
 curl --silent \
  -H "Content-Type:application/json" \
  -X POST --data "$(getCountOfSubscribers)" $url | jq '.result'
+echo
 
 echo Get Subscriber
-curl --silent \
+index='0000000000000000000000000000000000000000000000000000000000000001'
+ipv6=$(curl --silent \
  -H "Content-Type:application/json" \
- -X POST --data "$(getSubscriber)" $url
+ -X POST --data "$(getSubscriber $index)" $url | jq '.result')
+echo $ipv6
+echo
 
-echo Get Member 
+
+echo Get member # gets the ethereum address from an ipv6 bytes16
+#removes the "0x and the last "
+ipv6=${ipv6:3:64}
 curl --silent \
  -H "Content-Type:application/json" \
- -X POST --data "$(getMember deadbeef)" $url | jq '.result'
+ -X POST --data "$(getMember $ipv6)" $url | jq '.result'
