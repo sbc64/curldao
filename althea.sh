@@ -81,7 +81,7 @@ function getMember() {
 EOF
 }
 
-# This gets the etherum address from an ipv6 address
+# This gets the bill for the corresponsing ethereum addr
 function getBill() {
   cat << EOF
 {
