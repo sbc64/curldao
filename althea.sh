@@ -81,6 +81,22 @@ function getMember() {
 EOF
 }
 
+# This gets the etherum address from an ipv6 address
+function getBill() {
+  cat << EOF
+{
+  "jsonrpc":"2.0",
+  "method":"eth_call",
+  "params":[{
+    "to": "$AltheaRinkeby",
+    "data": "0x$billMapping$1"
+  },
+  "latest"],
+  "id":2
+}
+EOF
+}
+
 
 # URL of the RPC endpoint
 url='https://sasquatch.network/rinkeby'
@@ -105,6 +121,25 @@ echo
 echo Get member # gets the ethereum address from an ipv6 bytes16
 #removes the "0x and the last "
 ipv6=${ipv6:3:64}
-curl --silent \
+ethAddr=$(curl --silent \
  -H "Content-Type:application/json" \
- -X POST --data "$(getMember $ipv6)" $url | jq '.result'
+ -X POST --data "$(getMember $ipv6)" $url | jq '.result')
+echo $ethAddr
+echo
+
+echo Get bill
+# Removes the leading zeroes and quotes
+ethAddr=${ethAddr:3:64}
+bill=$(curl --silent \
+ -H "Content-Type:application/json" \
+ -X POST --data "$(getBill $ethAddr)" $url | jq '.result')
+echo
+
+echo balance:
+echo ${bill:3:64}
+echo
+echo perBlock:
+echo ${bill:67:64}
+echo
+echo lastUpdated:
+echo ${bill:131:64}
