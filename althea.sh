@@ -128,7 +128,7 @@ echo $ethAddr
 echo
 
 echo Get bill
-# Removes the leading zeroes and quotes
+# Removes the quotes (we want the leading zeroes to make it 32 hexbytes
 ethAddr=${ethAddr:3:64}
 bill=$(curl --silent \
  -H "Content-Type:application/json" \
